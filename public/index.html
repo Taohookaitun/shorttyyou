@@ -35,17 +35,16 @@
             <form class="search-container" method="POST" action="http://localhost:3000/shorten">
                 <input type="text" class="search-box" id="short-text" name="originalUrl" placeholder="www.original_url.com">
                 <input type="text" id="shortened-link" class="readonly" placeholder="Shorted URL"readonly>
+                <a id="shorted-urls" href="" target="_blank"></a>
                 <p id="warning-message" style="color: red;"></p>
                 <button class="search-button" type="button" id="shorten">Shorten</button>
+                <button class="search-button" id="generate-qr">Generate QR Code</button>
                 <div id="qrcode-container" style="display: none;">
                 <h2>QR Code</h2>
-            <div id="qrcode"></div>
-            </div>
-            <button class="search-button" id="qr">Make QR Code</button>   
+                <div id="qrcode"></div>
+            </div>   
                 <div class="share-box">
                     <div class="social-icons">
-                        <!-- เพิ่มไอคอนโซเชียลมีเดียต่าง ๆ ที่คุณต้องการแชร์ -->
-                        <!-- ตัวอย่าง: -->
                         <a href="#" class="social-icon">Facebook</a>
                         <a href="#" class="social-icon">Twitter</a>
                     </div>
@@ -66,7 +65,7 @@
     if (originalUrl.length === 0) {
         warningMessage.textContent = 'Please enter URL.';
     } else {
-        const response = await fetch("/shorten", {
+        const response = await fetch("/server", {
             method: "POST",
             body: JSON.stringify({ originalUrl }),
             headers: {
@@ -85,9 +84,24 @@
 });
 
         </script>
+        <script>
+            // ...
+
+            // เมื่อผู้ใช้คลิกที่ปุ่ม "Generate QR Code"
+            const generateQrButton = document.getElementById("generate-qr");
+            generateQrButton.addEventListener("click", () => {
+                // สร้าง QR Code และแสดง
+                const qr = new QRCode(qrcodeDiv, {
+                    text: shortenedLinkInput.value,
+                    width: 128,
+                    height: 128,
+                });
+                qrcodeContainer.style.display = "block";
+            });
+        </script>
+
 
         <div class="tab-content" id="table_statisticsurl" >
-                กกกกกกกกกกกกกกกกกกกกกก
         </div>
     </main>
 
@@ -96,6 +110,6 @@
     </footer>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script src="conn.js"></script>
-
+    <script src="server.js"></script>
 </body>
 </html>

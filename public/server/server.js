@@ -1,7 +1,6 @@
 const express = require('express');
+const router = express.Router();
 const mysql = require('mysql');
-const app = express();
-const port = 3000;
 
 // สร้างการเชื่อมต่อกับ MySQL
 const db = mysql.createConnection({
@@ -19,11 +18,11 @@ db.connect((err) => {
   console.log('Connected to MySQL');
 });
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// ใช้ bodyParser เพื่อรับ JSON จากคำขอ
+router.use(express.json());
 
 // รับคำขอสร้าง Short URL
-app.post('/shorten', (req, res) => {
+router.post('/', (req, res) => {
   const originalUrl = req.body.originalUrl;
 
   // สร้างรหัส Short URL (ตัวอย่าง: abcd123)
@@ -42,13 +41,4 @@ app.post('/shorten', (req, res) => {
   });
 });
 
-function generateShortUrlCode() {
-  // สร้างรหัส Short URL ตามต้องการ
-  // เช่นใช้วิธีการสุ่มหรือแปลงจาก ID อัตโนมัติ
-  // โค้ดนี้ให้เพียงแสดงตัวอย่างเท่านั้น
-  return "abcd123";
-}
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = router;
